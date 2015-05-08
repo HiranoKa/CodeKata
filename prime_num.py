@@ -10,8 +10,7 @@ class PrimeNum():
         if self.num <= 0:
             print('1以上の数値を入力してください！！')
         else:
-            count = 2
-            while count < self.num:
+            for count in range(2, self.num):
                 self.result = self.CalcPrimeNum(count)
                 if self.result == True:
                     print(count)
@@ -22,23 +21,21 @@ class PrimeNum():
             print('1以上の数値を入力してください！！')
         else:
             self.result = self.CalcPrimeNum(number)
-            str1 = self.num
+            str1 = str(number)
             if self.result == True:
                 str2 = "は素数です"
             else:
                 str2 = 'は素数ではありません'
-            print(str2)
+            print(str1+str2)
 
     def CalcPrimeNum(self, number):
         if number == 0:
             return False
         if number == 1:
             return False
-        count = 2
-        while count < number:
+        for count in range(2, number):
             if number % count == 0:
                 return False
-            count += 1
         return True
 
 if __name__ == '__main__':
