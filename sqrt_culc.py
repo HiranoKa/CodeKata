@@ -5,6 +5,7 @@ class Sqrt():
     def __init__(self, num = 0):
         self.num = num
         self.RunSqrt()
+
     def RunSqrt(self):
         Rslt = self.CulcSqrt(self.num)
         if Rslt < 0:
