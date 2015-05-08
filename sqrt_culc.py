@@ -23,6 +23,7 @@ class Sqrt():
 
         Data1 = Number
         Lmax = 50
+        Dev = 1e-5
 
         for Connt in range(0, Lmax):
             Data2=(Data1+(Number/Data1))/2
