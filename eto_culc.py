@@ -1,12 +1,23 @@
 __author__ = 'le-user'
 # -*- coding: utf-8 -*-
 
+import datetime
+
 class EtoCulc():
-    def __init__(self, Year = 0):
-        self.Year = Year
+    def __init__(self, Year = ''):
         self.Dt1 = ['庚', '辛', '壬', '癸', '甲', '乙', '丙', '丁', '戊', '己']
         self.Dt2 = ['申', '酉', '戌', '亥', '子', '丑', '寅', '卯', '辰', '巳', '午', '未']
-        self.Eto = self.GetEto(Year)
+        self.Year = self.ChkLInpYearGetEto(Year)
+        self.Eto = self.GetEto(self.Year)
+
+    def ChkLInpYearGetEto(self, Year):
+        if Year.isdigit() == False:
+            #数字以外が入っていたら現在の年を再設定する
+            now = datetime.datetime.now()
+            Rslt = int(now.strftime('%Y'))
+        else:
+            Rslt = int(Year)
+        return Rslt
 
     def GetEto(self, Year):
         Rslt = ''
@@ -35,8 +46,8 @@ class EtoCulc():
 if __name__ == '__main__':
     # 西暦を入力
     YearStr = input('干支を調べる西暦を入力してください！')
-    YearInt = int(YearStr)
-    Func = EtoCulc(YearInt)
+
+    Func = EtoCulc(YearStr)
     EtoStr = Func.Eto
     if EtoStr == '':
         RsltStr = '西暦を正しく入力してください！'
