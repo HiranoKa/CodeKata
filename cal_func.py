@@ -5,7 +5,6 @@ import datetime
 import calendar
 
 class CalFunc():
-
     def __init__(self, Year = '', Mon = ''):
         # 年情報設定
         self.Year = self.GetYearCalFunc(Year)
