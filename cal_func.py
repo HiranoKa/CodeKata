@@ -38,7 +38,16 @@ class CalFunc():
 
     def DspCalFunc(self, Year, Mon):
         calendar.setfirstweekday(calendar.SUNDAY)
-        print(calendar.month(Year,Mon))
+        print(calendar.month(Year, Mon))
+
+    def DspCalFunc2(self, Year, Mon):
+        w = ' Mo Tu We Th Fr Sa Su'
+        D = calendar.monthrange(Year, Mon)[1]
+        F = calendar.weekday(Year, Mon, 1)
+        s = '   ' * (F+1) + '  '.join(map(str,range(1, 10))) + ' ' + ' '.join(map(str,range(10, D+1)))
+        print(w, end='')
+        for i, e in enumerate(s):
+            print(e, end='\n' if i % len(w) == 0 or (i+1) == len(s) else '')
 
 if __name__ == '__main__':
     Year =input("西暦年を入力してください：")
