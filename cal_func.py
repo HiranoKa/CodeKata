@@ -5,13 +5,18 @@ import datetime
 import calendar
 
 class CalFunc():
-    def __init__(self, Year = '', Mon = ''):
+    def __init__(self, Year = '', Mon = '', Type = 1):
         # 年情報設定
         self.Year = self.GetYearCalFunc(Year)
         # 月情報設定
         self.Mon = self.GetMonCalFunc(Mon)
         # カレンダー情報出力
-        self.DspCalFunc(self.Year, self.Mon)
+        if Type == 2:
+            self.DspCalFunc2(self.Year, self.Mon)
+        elif Type == 3:
+            self.HtmlCalFunc(self.Year, self.Mon)
+        else:
+            self.DspCalFunc(self.Year, self.Mon)
 
     def GetYearCalFunc(self, Year = ''):
         if Year.isdigit() == False:
@@ -39,6 +44,14 @@ class CalFunc():
         calendar.setfirstweekday(calendar.SUNDAY)
         print(calendar.month(Year, Mon))
 
+    def HtmlCalFunc(self, Year, Mon):
+        OutpNm = 'Calendar.html'
+
+        Cal = calendar.HTMLCalendar()
+        file = open(OutpNm, 'w')
+        file.write(Cal.formatmonth(Year, Mon))
+        file.close()
+
     def DspCalFunc2(self, Year, Mon):
         w = ' Mo Tu We Th Fr Sa Su'
         D = calendar.monthrange(Year, Mon)[1]
@@ -51,4 +64,5 @@ class CalFunc():
 if __name__ == '__main__':
     Year =input("西暦年を入力してください：")
     Mon = input("月を入力してください：")
-    CalFunc(Year, Mon)
+    Type = input('出力方式を指定してください(1:CUI/2:CUI-2/3:HTML):')
+    CalFunc(Year, Mon, Type)
