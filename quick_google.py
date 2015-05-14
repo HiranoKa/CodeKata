@@ -71,6 +71,53 @@ def InputDate(wkDate = ''):
     print(InputDate)
     return InputDate
 
+def EventListHtml():
+    Fname = 'EventList.html'
+    credentials = get_credentials()
+    service = build('calendar', 'v3', http=credentials.authorize(Http()))
+
+    calendars = service.calendarList().list().execute()
+    target_calendar_id = calendars['items'][0]['id']
+
+    # ファイルオープン
+    f = open(Fname, 'w')
+
+    # ヘッダー
+    f.write('''
+   <html>
+   <head></head>
+   <body>
+      <ul>\n''')
+
+    #　イベント一覧取得
+    now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
+    eventsResult = service.events().list(
+        calendarId='primary', timeMin=now, maxResults=10, singleEvents=True,
+        orderBy='startTime').execute()
+    events = eventsResult.get('items', [])
+
+    f.write('          <table border="1" cellpadding="1" cellspacing="1" class="event_list">\n')
+    f.write('             <tr><th colspan="3" class="event_list">EventList(' + target_calendar_id + ')</th></tr>\n')
+    f.write('             <tr><th class="tytle">TYTLE</th><th class="StrtTm">START</th><th class="EndTm">END</th></tr>\n')
+    if not events:
+        f.write('             <tr><td class="noday">&nbsp;</td><td class="noday">&nbsp;</td></td><td class="noday">&nbsp;</td></tr>\n')
+    for event in events:
+        strtTm = event['start'].get('dateTime', event['start'].get('date'))
+        endTm = event['end'].get('dateTime', event['end'].get('date'))
+        tytle = event['summary']
+        f.write('             <tr><td class="tytle">' + tytle + '</td><td class="StrtTm">' + strtTm + '</td><td class="EndTm">' + endTm +'</td></tr>\n')
+
+    f.write('''          </table>''')
+
+    # フッター
+    f.write('''
+       </ul>
+   </body>
+   </html>''')
+
+    # 終了
+    f.close()
+
 def EventList(service):
     """Shows basic usage of the Google Calendar API.
 
@@ -128,7 +175,7 @@ def EventOpe(InputDt):
     else:
         print('unknown input data')
 
-def HoldayList():
+def HoldayList(InputDt):
     credentials = get_credentials()
     service = build('calendar', 'v3', http=credentials.authorize(Http()))
 
@@ -136,9 +183,34 @@ def HoldayList():
     events = service.events().list(calendarId='ja.japanese#holiday@group.v.calendar.google.com').execute()
 
     # 祝祭日一覧をソートして表示
-    print('Getting the holiday list')
-    for item in sorted(events['items'], key=lambda item: item['start']['date']):
-        print( u'{0}\t{1}'.format(item['start']['date'], item['summary']))
+    if InputDt == '5':
+        # ファイルオープン
+        f = open('HolidayList.html', 'w')
+
+        # ヘッダー
+        f.write('''
+       <html><head>
+       </head><body>
+          <ul>\n''')
+
+        f.write('          <table border="1" cellpadding="1" cellspacing="1" class="holiday_list">\n')
+        f.write('             <tr><th colspan="2" class="holiday_list">休日一覧</th></tr>\n')
+        f.write('             <tr><th class="Date">日付</th><th class="Name">名称</th></tr>\n')
+        for item in sorted(events['items'], key=lambda item: item['start']['date']):
+            f.write('             <tr><td class="Date">' + item['start']['date'] + '</td><td class="Name">' + item['summary'] + '</td></tr>\n')
+        f.write('''          </table>''')
+
+        # フッター
+        f.write('''
+          </ul>
+       </body></html>''')
+
+        f.close()
+
+    else:
+        print('Getting the holiday list')
+        for item in sorted(events['items'], key=lambda item: item['start']['date']):
+            print( u'{0}\t{1}'.format(item['start']['date'], item['summary']))
 
 def main():
     """Shows basic usage of the Google Calendar API.
@@ -163,10 +235,12 @@ def main():
         print(start, event['summary'])
 
 if __name__ == '__main__':
-    InputDt = input('1:イベント一覧/2:イベント追加/3祝祭日一覧：')
+    InputDt = input('1:イベント一覧/2:イベント追加/3:イベント一覧(HTML)/4:祝祭日一覧/5:祝祭日一覧(HTML)：')
     if (InputDt == '1') | (InputDt == '2'):
         EventOpe(InputDt)
     elif InputDt == '3':
-        HoldayList()
+        EventListHtml()
+    elif (InputDt == '4') | (InputDt == '5') :
+        HoldayList(InputDt)
     else:
         print('unknown input data')
