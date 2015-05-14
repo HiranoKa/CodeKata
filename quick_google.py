@@ -92,9 +92,9 @@ def EventList(service):
 
 def EventAdd(service):
     event = {
-        'start': {'date':'2015-05-14'},
-        'end': {'date':'2015-05-15'},
-        'summary': 'event_from_api'
+        'start': {'date':''},
+        'end': {'date':''},
+        'summary': ''
     }
 
     Tytle = input('タイトルを入力 : ')
